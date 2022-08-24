@@ -8,9 +8,9 @@ type Config = {
 };
 
 const defaultConfig: Config = {
-  useSoftLeft: true,
-  useSoftRight: true,
-  useNumbers: true,
+  useSoftLeft: false,
+  useSoftRight: false,
+  useNumbers: false,
 };
 
 export class OnyxNavigation {
