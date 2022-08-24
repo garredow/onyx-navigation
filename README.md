@@ -47,6 +47,10 @@ Marks an element as an Onyx scroller. You need one of these in each Onyx group. 
 
 Marks an element as an Onyx item. This must be a unique value per Onyx group.
 
+### `data-onyx-focused`
+
+When an element is focused, it gains this attribute.
+
 ### `data-onyx-shortcut`
 
 This lets you tie an element to a 1-9 number key. Pressing one of these keys will fire `onyx:focus` and `onyx:select` on the marked element.
