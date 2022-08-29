@@ -8,6 +8,7 @@ type Config = {
   arrowRepeatRate: number;
   scrollBehavior: ScrollBehavior;
   allowedKeysInInputs: string[];
+  groupRegistration: 'auto' | 'manual';
 };
 
 const defaultConfig: Config = {
@@ -16,6 +17,7 @@ const defaultConfig: Config = {
   arrowRepeatRate: 100,
   scrollBehavior: ScrollBehavior.Dynamic,
   allowedKeysInInputs: ['ArrowDown', 'ArrowUp', 'SoftLeft', 'SoftRight', 'Enter'],
+  groupRegistration: 'auto',
 };
 
 export class OnyxNavigation {
@@ -38,6 +40,18 @@ export class OnyxNavigation {
 
   static getActiveGroup(): Group | null {
     return this.groupStack.at(-1) || null;
+  }
+
+  private static checkGroups(): void {
+    const allGroups = Array.from(document.querySelectorAll('[data-onyx-group-id]'))
+      .map((a) => (a as HTMLElement).dataset.onyxGroupId)
+      .filter(Boolean) as string[];
+    const existingGroups = this.groupStack.map((a) => a.id);
+    const newGroups = allGroups.filter((a) => !existingGroups.includes(a));
+    const removedGroups = existingGroups.filter((a) => !allGroups.includes(a));
+
+    removedGroups.forEach((a) => this.unregisterGroup(a));
+    newGroups.forEach((a) => this.registerGroup(a));
   }
 
   // Key Handler
@@ -199,6 +213,10 @@ export class OnyxNavigation {
   }
 
   private static handleKeyDown(ev: KeyboardEvent): void {
+    if (this.config.groupRegistration === 'auto') {
+      this.checkGroups();
+    }
+
     const key = this.parseKey(ev);
 
     if (!key || !this.getActiveGroup() || this.activeKey) {
@@ -290,9 +308,10 @@ export class OnyxNavigation {
     item: HTMLElement,
     behavior: 'smooth' | 'auto'
   ): boolean {
-    const rect = item.getBoundingClientRect();
-    const topDiff = scroller.offsetTop - rect.top;
-    const bottomDiff = rect.bottom - (scroller.offsetHeight + scroller.offsetTop);
+    const itemRect = item.getBoundingClientRect();
+    const scrollerRect = scroller.getBoundingClientRect();
+    const topDiff = scrollerRect.top - itemRect.top;
+    const bottomDiff = itemRect.bottom - (scrollerRect.height + scrollerRect.top);
 
     scroller.scrollBy({
       top: topDiff > 0 ? -topDiff : bottomDiff > 0 ? bottomDiff : 0,
