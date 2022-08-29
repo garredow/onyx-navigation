@@ -3,17 +3,19 @@ import { ScrollBehavior } from './enums';
 import { Group } from './models';
 
 type Config = {
-  enableArrorRepeat: boolean;
+  enableArrowRepeat: boolean;
   arrowRepeatDelay: number;
   arrowRepeatRate: number;
   scrollBehavior: ScrollBehavior;
+  allowedKeysInInputs: string[];
 };
 
 const defaultConfig: Config = {
-  enableArrorRepeat: true,
+  enableArrowRepeat: true,
   arrowRepeatDelay: 500,
   arrowRepeatRate: 100,
   scrollBehavior: ScrollBehavior.Dynamic,
+  allowedKeysInInputs: ['ArrowDown', 'ArrowUp', 'SoftLeft', 'SoftRight', 'Enter'],
 };
 
 export class OnyxNavigation {
@@ -186,10 +188,6 @@ export class OnyxNavigation {
   }
 
   private static handleKeyUp(ev: KeyboardEvent): void {
-    const key = this.parseKey(ev);
-
-    if (!key || key !== this.activeKey) return;
-
     this.activeKey = null;
 
     ev.preventDefault();
@@ -203,7 +201,6 @@ export class OnyxNavigation {
   private static handleKeyDown(ev: KeyboardEvent): void {
     const key = this.parseKey(ev);
 
-    // TODO: Handle inputs
     if (!key || !this.getActiveGroup() || this.activeKey) {
       return;
     }
@@ -218,7 +215,7 @@ export class OnyxNavigation {
 
     // Don't repeat non-arrow keys
     if (
-      !this.config.enableArrorRepeat ||
+      !this.config.enableArrowRepeat ||
       !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)
     )
       return;
@@ -252,8 +249,15 @@ export class OnyxNavigation {
       'SoftRight',
     ];
 
-    // TODO: Handle inputs. Example: When in an input, we want 1-9 to type, not
-    // act as a shortcut key.
+    const target = ev.target as HTMLElement;
+    const isInput =
+      target.tagName.toLowerCase() === 'input' ||
+      target.tagName.toLowerCase() === 'textarea' ||
+      (target.attributes as any).role === 'textbox';
+
+    if (isInput && !this.config.allowedKeysInInputs.includes(key)) {
+      return null;
+    }
 
     return [...shortcutKeys, ...dpadKeys].includes(key) ? key : null;
   }
