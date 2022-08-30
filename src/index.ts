@@ -1,6 +1,6 @@
-import { ElementFinder } from './ElementFinder';
 import { ScrollBehavior } from './enums';
 import { Group } from './models';
+import { OnyxGroup } from './OnyxGroup';
 
 type Config = {
   enableArrowRepeat: boolean;
@@ -56,10 +56,10 @@ export class OnyxNavigation {
 
   // Key Handler
 
-  static startListening(config?: Partial<Config>): void {
+  static startListening(options?: Partial<Config>): void {
     if (this.listening) return;
 
-    this.config = { ...defaultConfig, ...config };
+    this.config = { ...defaultConfig, ...options };
     document.addEventListener('keydown', this.handleKeyDown.bind(this), false);
     document.addEventListener('keyup', this.handleKeyUp.bind(this), false);
 
@@ -76,129 +76,44 @@ export class OnyxNavigation {
   }
 
   private static actOnKey(key: string, isRepeat: boolean): void {
+    const group = new OnyxGroup(this.getActiveGroup()?.id || '');
+    const focused = group.getFocusedItem();
+
     if (key === 'Enter') {
-      const current = new ElementFinder(this.getActiveGroup()!.id).getCurrent();
-      current?.dispatchEvent(
-        new CustomEvent('onyx:select', {
-          bubbles: true,
-          detail: {
-            groupId: this.getActiveGroup()!.id,
-            itemId: current?.dataset.onyxItemId,
-          },
-        })
-      );
+      focused?.select();
       return;
     }
 
-    if (key === 'SoftLeft') {
-      const current = new ElementFinder(this.getActiveGroup()!.id).getCurrent();
-      current?.dispatchEvent(
-        new CustomEvent('onyx:softleft', {
-          bubbles: true,
-          detail: {
-            groupId: this.getActiveGroup()!.id,
-            itemId: current?.dataset.onyxItemId,
-          },
-        })
-      );
-      return;
-    }
-
-    if (key === 'SoftRight') {
-      const current = new ElementFinder(this.getActiveGroup()!.id).getCurrent();
-      current?.dispatchEvent(
-        new CustomEvent('onyx:softright', {
-          bubbles: true,
-          detail: {
-            groupId: this.getActiveGroup()!.id,
-            itemId: current?.dataset.onyxItemId,
-          },
-        })
-      );
+    if (key === 'SoftLeft' || key === 'SoftRight') {
+      focused?.softkey(key);
       return;
     }
 
     const shortcutKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
     if (shortcutKeys.includes(key)) {
-      const finder = new ElementFinder(this.getActiveGroup()!.id);
-      const current = finder.getCurrent();
-      const next = finder.getByShortcut(key);
-      if (!next) return;
+      focused?.blur();
 
-      current?.dispatchEvent(
-        new CustomEvent('onyx:blur', {
-          bubbles: true,
-          detail: {
-            groupId: this.getActiveGroup()!.id,
-            itemId: current?.dataset.onyxItemId,
-          },
-        })
-      );
-      current?.removeAttribute('data-onyx-focused');
+      const next = group.getItemByShortcut(key);
+      if (next) {
+        console.log('next', next);
 
-      next.dispatchEvent(
-        new CustomEvent('onyx:focus', {
-          bubbles: true,
-          detail: {
-            groupId: this.getActiveGroup()!.id,
-            itemId: next.dataset.onyxItemId,
-          },
-        })
-      );
-
-      next.dispatchEvent(
-        new CustomEvent('onyx:select', {
-          bubbles: true,
-          detail: {
-            groupId: this.getActiveGroup()!.id,
-            itemId: next.dataset.onyxItemId,
-          },
-        })
-      );
-
-      next.dataset.onyxFocused = 'true';
-      const scroller: HTMLElement | null =
-        finder.getGroup()?.querySelector(`[data-onyx-scroller]`) || null;
-      if (!scroller) throw new Error('Cannot find scroller');
-
-      this.scrollIntoView(scroller, next, this.getBehavior(isRepeat));
+        next.select();
+        group.scrollToItem(next, 'auto');
+      }
 
       return;
     }
 
-    const result = new ElementFinder(this.getActiveGroup()!.id).find(key as any);
-
-    if (result.previous && result.next) {
-      result.previous.dispatchEvent(
-        new CustomEvent('onyx:blur', {
-          bubbles: true,
-          detail: {
-            groupId: this.getActiveGroup()!.id,
-            itemId: result.previous?.dataset.onyxItemId,
-          },
-        })
-      );
-      result.previous.removeAttribute('data-onyx-focused');
+    const next = group.findNextItem(key as any);
+    if (next) {
+      focused?.blur();
+      next.focus();
+      group.scrollToItem(next, this.getScrollBehavior(isRepeat));
+    } else if (key === 'ArrowUp' && group.canScrollUp()) {
+      group.scrollUp();
+    } else if (key === 'ArrowDown' && group.canScrollDown()) {
+      group.scrollDown();
     }
-
-    if (!result.next) return;
-
-    result.next.dataset.onyxFocused = 'true';
-
-    const scroller: HTMLElement | null = result.group.querySelector(`[data-onyx-scroller]`);
-    if (!scroller) return;
-
-    this.scrollIntoView(scroller, result.next, this.getBehavior(isRepeat));
-
-    result.next?.dispatchEvent(
-      new CustomEvent('onyx:focus', {
-        bubbles: true,
-        detail: {
-          groupId: this.getActiveGroup()!.id,
-          itemId: result.next?.dataset.onyxItemId,
-        },
-      })
-    );
   }
 
   private static handleKeyUp(ev: KeyboardEvent): void {
@@ -280,7 +195,7 @@ export class OnyxNavigation {
     return [...shortcutKeys, ...dpadKeys].includes(key) ? key : null;
   }
 
-  private static getBehavior(isRepeat: boolean): 'auto' | 'smooth' {
+  private static getScrollBehavior(isRepeat: boolean): 'auto' | 'smooth' {
     if (this.config.scrollBehavior === ScrollBehavior.Instant) {
       return 'auto';
     } else if (this.config.scrollBehavior === ScrollBehavior.Smooth) {
@@ -292,32 +207,5 @@ export class OnyxNavigation {
     } else {
       return 'smooth';
     }
-  }
-
-  private static scrollContent(direction: 'up' | 'down', scroller: HTMLElement): boolean {
-    scroller.scrollBy({
-      top: (scroller.clientHeight / 3) * (direction === 'up' ? -1 : 1),
-      behavior: 'smooth',
-    });
-
-    return true;
-  }
-
-  private static scrollIntoView(
-    scroller: HTMLElement,
-    item: HTMLElement,
-    behavior: 'smooth' | 'auto'
-  ): boolean {
-    const itemRect = item.getBoundingClientRect();
-    const scrollerRect = scroller.getBoundingClientRect();
-    const topDiff = scrollerRect.top - itemRect.top;
-    const bottomDiff = itemRect.bottom - (scrollerRect.height + scrollerRect.top);
-
-    scroller.scrollBy({
-      top: topDiff > 0 ? -topDiff : bottomDiff > 0 ? bottomDiff : 0,
-      behavior,
-    });
-
-    return true;
   }
 }

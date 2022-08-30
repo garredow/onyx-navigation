@@ -3,4 +3,6 @@ export type Dimensions = {
   bottom: number;
   left: number;
   right: number;
+  height: number;
+  width: number;
 };
