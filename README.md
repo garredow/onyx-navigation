@@ -58,12 +58,7 @@ This lets you tie an element to a 1-9 number key. Pressing one of these keys wil
 ## Example
 
 ```js
-OnyxNavigation.startListening({
-  useNumbers: true,
-  useSoftLeft: true,
-  useSoftRight: true,
-});
-OnyxNavigation.registerGroup('main');
+OnyxNavigation.startListening();
 
 document.addEventListener('onyx:focus', (ev) => {
   console.log(`Item ${ev.detail.itemId} in group ${ev.detail.groupId} focused`);
