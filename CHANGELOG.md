@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/garredow/onyx-navigation/compare/v1.0.1...v1.1.0) (2022-08-29)
+
+
+### Features
+
+* add option to disable keys when an input is focused ([cc1cca4](https://github.com/garredow/onyx-navigation/commit/cc1cca41fdb1b55196e98ed2078bac17de1b3fc7))
+* repeat arrow keys if key held down ([d5f66d8](https://github.com/garredow/onyx-navigation/commit/d5f66d8d9cf729da2265c22699fb6cf169c8fcc6))
+
 ## [1.0.1](https://github.com/garredow/onyx-navigation/compare/v1.0.0...v1.0.1) (2022-08-24)
 
 
