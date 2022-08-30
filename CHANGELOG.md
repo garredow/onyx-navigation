@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/garredow/onyx-navigation/compare/v1.1.0...v1.2.0) (2022-08-30)
+
+
+### Features
+
+* add option for auto group registration ([6a5da05](https://github.com/garredow/onyx-navigation/commit/6a5da05824f3d2d86e008c6eb104770f563bc62a))
+* rewrite ([0983023](https://github.com/garredow/onyx-navigation/commit/09830236c06bb732927f9f8948e3564d5f614e0e))
+
 # [1.1.0](https://github.com/garredow/onyx-navigation/compare/v1.0.1...v1.1.0) (2022-08-29)
 
 
