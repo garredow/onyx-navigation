@@ -277,43 +277,6 @@ export class OnyxGroup {
     return this.overlapCenterV(focused, found);
   }
 
-  private findClosest(focused: OnyxItem, others: OnyxItem[]): OnyxItem[] {
-    const closestItems = others
-      .filter((a) => focused.dimensions.top - a.dimensions.bottom >= 0)
-      .sort((a, b) => {
-        const diffA = focused.dimensions.top - a.dimensions.bottom;
-        const diffB = focused.dimensions.top - b.dimensions.bottom;
-        if (diffA > diffB) return 1;
-        else if (diffA < diffB) return -1;
-        else return 0;
-      })
-      .filter((a, i, arr) => {
-        const closest = focused.dimensions.top - arr[0].dimensions.bottom;
-        const current = focused.dimensions.top - a.dimensions.bottom;
-
-        console.log('closest', closest);
-        return closest === current;
-      });
-
-    console.log('closestItems', closestItems);
-    return closestItems;
-
-    const map = others.reduce((acc, val) => {
-      const diff = focused.dimensions.top - val.dimensions.bottom;
-      acc[diff] = acc[diff] ? [...acc[diff], val] : [val];
-      return acc;
-    }, {} as { [key: string]: OnyxItem[] });
-    const keys = Object.keys(map)
-      .filter((a) => Number(a) >= 0)
-      .sort((a, b) => {
-        if (Number(a) > Number(b)) return 1;
-        else if (Number(a) < Number(b)) return -1;
-        else return 0;
-      });
-    const closest = map[keys[0]] ?? [];
-    return closest;
-  }
-
   private overlapV(
     sourceLeft: number,
     sourceRight: number,

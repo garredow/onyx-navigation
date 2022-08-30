@@ -95,8 +95,6 @@ export class OnyxNavigation {
 
       const next = group.getItemByShortcut(key);
       if (next) {
-        console.log('next', next);
-
         next.select();
         group.scrollToItem(next, 'auto');
       }
