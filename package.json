@@ -49,6 +49,6 @@
     }
   },
   "dependencies": {
-    "jsqr": "^1.4.0"
+    "onyx-keys": "^1.1.1"
   }
 }
