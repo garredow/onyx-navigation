@@ -22,6 +22,11 @@ export class OnyxNavigation {
   private static config: Config = defaultConfig;
   private static keys: any;
 
+  static restoreFocusedItems() {
+    this.checkGroups();
+    this.groupStack.forEach(({ id }) => new OnyxGroup(id).restoreFocusedItem());
+  }
+
   // Groups
 
   static registerGroup(id: string): void {

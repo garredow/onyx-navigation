@@ -1,6 +1,7 @@
 import { Dimensions } from './models';
 import { OnyxItem } from './OnyxItem';
 import { OnyxScroller } from './OnyxScroller';
+import { Route } from './services';
 
 export class OnyxGroup {
   id: string;
@@ -31,6 +32,13 @@ export class OnyxGroup {
     return this._dimensions;
   }
 
+  restoreFocusedItem(): void {
+    const focusedId = Route.getFocusedId(this.id);
+    if (focusedId) {
+      this.focusItem(focusedId, 'auto');
+    }
+  }
+
   hasItems(): boolean {
     return this.items.length > 0;
   }
@@ -40,20 +48,16 @@ export class OnyxGroup {
   }
 
   focusItem(itemId: string, scrollBehavior: 'auto' | 'smooth'): void {
-    const item = this.items.find((a) => a.id === itemId);
-    if (!item) {
+    const previous = this.items.find((a) => a.isFocused);
+    const next = this.items.find((a) => a.id === itemId);
+    if (!next) {
       throw new Error(`No item for ID ${itemId} found in group ${this.id}`);
     }
 
-    const previous = this.items.find((a) => a.isFocused);
-    const next = this.items.find((a) => a.id === itemId);
-
     previous?.blur();
-    next?.focus();
+    next.focus();
 
-    if (next) {
-      this.scrollToItem(next, scrollBehavior);
-    }
+    this.scrollToItem(next, scrollBehavior);
   }
 
   getFocusedItem(): OnyxItem | null {

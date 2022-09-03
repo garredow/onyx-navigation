@@ -1,10 +1,10 @@
 import { Dimensions } from './models';
+import { Route } from './services';
 
 export class OnyxItem {
   id: string;
   shortcutId: string | undefined;
   groupId: string;
-  isFocused: boolean;
   element: HTMLElement;
   private _dimensions: Dimensions | null = null;
 
@@ -16,7 +16,10 @@ export class OnyxItem {
     this.id = id as string;
     this.shortcutId = shortcutId;
     this.groupId = groupId;
-    this.isFocused = this.element.hasAttribute('data-onyx-focused');
+  }
+
+  get isFocused(): boolean {
+    return this.element.hasAttribute('data-onyx-focused');
   }
 
   get dimensions() {
@@ -27,6 +30,7 @@ export class OnyxItem {
   }
 
   focus(): void {
+    Route.setFocusedId(this.groupId, this.id);
     this.element.setAttribute('data-onyx-focused', '');
     this.element.dispatchEvent(
       new CustomEvent('onyx:focus', {
@@ -37,10 +41,10 @@ export class OnyxItem {
         },
       })
     );
-    this.isFocused = true;
   }
 
   blur(): void {
+    Route.setFocusedId(this.groupId, undefined);
     this.element.removeAttribute('data-onyx-focused');
     this.element.dispatchEvent(
       new CustomEvent('onyx:blur', {
@@ -51,7 +55,6 @@ export class OnyxItem {
         },
       })
     );
-    this.isFocused = false;
   }
 
   select(): void {
