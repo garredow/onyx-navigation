@@ -1,3 +1,15 @@
+# [1.4.0](https://github.com/garredow/onyx-navigation/compare/v1.3.0...v1.4.0) (2022-09-10)
+
+
+### Bug Fixes
+
+* remove unsupported code ([b156792](https://github.com/garredow/onyx-navigation/commit/b156792c5f85abbea8532d5fdf4499a9e7bb1531))
+
+
+### Features
+
+* add method to restore focused item ([0ecda79](https://github.com/garredow/onyx-navigation/commit/0ecda795e32893b90babd6c0dc2eed4a2f5a5245))
+
 # [1.3.0](https://github.com/garredow/onyx-navigation/compare/v1.2.0...v1.3.0) (2022-09-01)
 
 
