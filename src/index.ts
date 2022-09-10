@@ -38,7 +38,7 @@ export class OnyxNavigation {
   }
 
   static getActiveGroup(): Group | null {
-    return this.groupStack.at(-1) || null;
+    return this.groupStack[this.groupStack.length - 1] || null;
   }
 
   private static checkGroups(): void {

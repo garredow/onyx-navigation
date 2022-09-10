@@ -139,7 +139,7 @@ export class OnyxGroup {
 
   private findTop(focused: OnyxItem | null, others: OnyxItem[]): OnyxItem | null {
     if (!focused) {
-      return others.at(-1) || null;
+      return others[others.length - 1] || null;
     }
     if (others.length === 0) {
       return null;
