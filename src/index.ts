@@ -1,8 +1,10 @@
+import getDescriptors from 'object.getownpropertydescriptors';
 import { OnyxKeys } from 'onyx-keys';
 import { KeyPressEvent } from 'onyx-keys/lib/events';
 import { ScrollBehavior } from './enums';
 import { Group } from './models';
 import { OnyxGroup } from './OnyxGroup';
+getDescriptors.shim();
 
 type Config = {
   scrollBehavior: ScrollBehavior;
@@ -60,24 +62,27 @@ export class OnyxNavigation {
 
     this.config = { ...defaultConfig, ...options };
 
-    this.keys = OnyxKeys.subscribe({
-      onArrowUp: this.handleKeyPress.bind(this),
-      onArrowDown: this.handleKeyPress.bind(this),
-      onArrowLeft: this.handleKeyPress.bind(this),
-      onArrowRight: this.handleKeyPress.bind(this),
-      onEnter: this.handleKeyPress.bind(this),
-      onSoftLeft: this.handleKeyPress.bind(this),
-      onSoftRight: this.handleKeyPress.bind(this),
-      on1: this.handleKeyPress.bind(this),
-      on2: this.handleKeyPress.bind(this),
-      on3: this.handleKeyPress.bind(this),
-      on4: this.handleKeyPress.bind(this),
-      on5: this.handleKeyPress.bind(this),
-      on6: this.handleKeyPress.bind(this),
-      on7: this.handleKeyPress.bind(this),
-      on8: this.handleKeyPress.bind(this),
-      on9: this.handleKeyPress.bind(this),
-    });
+    this.keys = OnyxKeys.subscribe(
+      {
+        onArrowUp: this.handleKeyPress.bind(this),
+        onArrowDown: this.handleKeyPress.bind(this),
+        onArrowLeft: this.handleKeyPress.bind(this),
+        onArrowRight: this.handleKeyPress.bind(this),
+        onEnter: this.handleKeyPress.bind(this),
+        onSoftLeft: this.handleKeyPress.bind(this),
+        onSoftRight: this.handleKeyPress.bind(this),
+        on1: this.handleKeyPress.bind(this),
+        on2: this.handleKeyPress.bind(this),
+        on3: this.handleKeyPress.bind(this),
+        on4: this.handleKeyPress.bind(this),
+        on5: this.handleKeyPress.bind(this),
+        on6: this.handleKeyPress.bind(this),
+        on7: this.handleKeyPress.bind(this),
+        on8: this.handleKeyPress.bind(this),
+        on9: this.handleKeyPress.bind(this),
+      },
+      { priority: 1 }
+    );
 
     this.listening = true;
   }
@@ -92,6 +97,8 @@ export class OnyxNavigation {
   }
 
   private static async handleKeyPress(ev: KeyPressEvent) {
+    console.log('keypress', ev);
+
     // We only want the arrow keys to repeat
     if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(ev.detail.key) && ev.repeat) {
       return;

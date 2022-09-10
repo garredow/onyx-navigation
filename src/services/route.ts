@@ -1,3 +1,6 @@
+import getDescriptors from 'object.getownpropertydescriptors';
+getDescriptors.shim();
+
 type StateObj = {
   focusMap: { [groupId: string]: string | undefined };
 };
