@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/garredow/onyx-navigation/compare/v1.2.0...v1.3.0) (2022-09-01)
+
+
+### Features
+
+* refactor using onyx-keys ([35bb6ca](https://github.com/garredow/onyx-navigation/commit/35bb6caa00c6f7a68714fc179832bfca6d09c0ca))
+
 # [1.2.0](https://github.com/garredow/onyx-navigation/compare/v1.1.0...v1.2.0) (2022-08-30)
 
 
