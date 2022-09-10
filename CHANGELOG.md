@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/garredow/onyx-navigation/compare/v1.4.0...v1.4.1) (2022-09-10)
+
+
+### Bug Fixes
+
+* update onyx-keys ([7e180ab](https://github.com/garredow/onyx-navigation/commit/7e180ab2fbe5cbe2087de1bf17e9de7c97e10768))
+
 # [1.4.0](https://github.com/garredow/onyx-navigation/compare/v1.3.0...v1.4.0) (2022-09-10)
 
 
