@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/garredow/onyx-navigation/compare/v1.4.1...v1.5.0) (2022-09-16)
+
+
+### Features
+
+* **getactivegroup:** return whole onyx group ([4a8c473](https://github.com/garredow/onyx-navigation/commit/4a8c473e1fc86ab1a4677c480e3a49b8504d8315))
+
 ## [1.4.1](https://github.com/garredow/onyx-navigation/compare/v1.4.0...v1.4.1) (2022-09-10)
 
 
