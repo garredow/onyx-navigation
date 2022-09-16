@@ -97,8 +97,6 @@ export class OnyxNavigation {
   }
 
   private static async handleKeyPress(ev: KeyPressEvent) {
-    console.log('keypress', ev);
-
     // We only want the arrow keys to repeat
     if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(ev.detail.key) && ev.repeat) {
       return;
