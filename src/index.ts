@@ -39,8 +39,11 @@ export class OnyxNavigation {
     this.groupStack = this.groupStack.filter((a) => a.id !== id);
   }
 
-  static getActiveGroup(): Group | null {
-    return this.groupStack[this.groupStack.length - 1] || null;
+  static getActiveGroup(): OnyxGroup | null {
+    const id = this.groupStack[this.groupStack.length - 1]?.id;
+    if (!id) return null;
+
+    return new OnyxGroup(id);
   }
 
   private static checkGroups(): void {
@@ -110,11 +113,12 @@ export class OnyxNavigation {
       this.checkGroups();
     }
 
-    if (ev.detail.key === 'Other' || !this.getActiveGroup()) {
+    const group = this.getActiveGroup();
+
+    if (ev.detail.key === 'Other' || !group) {
       return;
     }
 
-    const group = new OnyxGroup(this.getActiveGroup()?.id || '');
     const focused = group.getFocusedItem();
 
     if (ev.detail.key === 'Enter') {
