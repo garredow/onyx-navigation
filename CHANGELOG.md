@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/garredow/onyx-navigation/compare/v1.6.0...v1.7.0) (2022-09-21)
+
+
+### Features
+
+* add method to manually focus item ([34c06a7](https://github.com/garredow/onyx-navigation/commit/34c06a77a1c38affdadaa338ee2330728374175a))
+
 # [1.6.0](https://github.com/garredow/onyx-navigation/compare/v1.5.0...v1.6.0) (2022-09-16)
 
 
