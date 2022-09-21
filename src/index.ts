@@ -58,6 +58,10 @@ export class OnyxNavigation {
     newGroups.forEach((a) => this.registerGroup(a));
   }
 
+  static focusItem(groupId: string, itemId: string): void {
+    new OnyxGroup(groupId).focusItem(itemId, 'auto');
+  }
+
   // Key Handler
 
   static startListening(options?: Partial<Config>): void {
