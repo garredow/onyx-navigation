@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/garredow/onyx-navigation/compare/v1.5.0...v1.6.0) (2022-09-16)
+
+
+### Features
+
+* update onyx-keys ([8f536d1](https://github.com/garredow/onyx-navigation/commit/8f536d13f028b0d9caac74587bbffdb9fe9b293a))
+
 # [1.5.0](https://github.com/garredow/onyx-navigation/compare/v1.4.1...v1.5.0) (2022-09-16)
 
 
